@@ -1,13 +1,29 @@
 "use client";
 
-import React from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../redux/store";
+import { toggleSidebar } from "../redux/sidebarSlice";
 
 export default function Sidebar() {
+  const dispatch = useDispatch();
   const isSidebarVisible = useSelector(
     (state: RootState) => state.sidebar.isSidebarVisible,
   );
+
+  const handleResize = () => {
+    const isMobileView = window.innerWidth <= 768;
+    dispatch(toggleSidebar(!isMobileView));
+  };
+
+  useEffect(() => {
+    handleResize();
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   return (
     <div

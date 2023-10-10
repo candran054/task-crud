@@ -4,6 +4,7 @@ import { FaBars } from "react-icons/fa6";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleSidebar } from "../redux/sidebarSlice";
 import { RootState } from "../redux/store";
+import Image from "next/image";
 
 export default function Header() {
   const dispatch = useDispatch();
@@ -16,12 +17,26 @@ export default function Header() {
   };
 
   return (
-    <div className="flex justify-between p-4 bg-slate-200">
+    <div className="flex p-4 bg-slate-200">
       <FaBars
         onClick={handleSidebarToggle}
         className={`text-xl text-indigo-500 md:hidden`}
       />
-      <p className="md:flex md:w-full md:justify-end">Header</p>
+      <div className="flex w-full justify-end">
+        <Image
+          src="/images/Me.jpg"
+          width={50}
+          height={50}
+          alt="profile picture"
+          style={{
+            objectFit: "cover",
+            width: "2rem",
+            height: "2rem",
+            borderRadius: "100px",
+            backgroundColor: "ivory",
+          }}
+        />
+      </div>
     </div>
   );
 }

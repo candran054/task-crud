@@ -1,11 +1,16 @@
 import "./globals.css";
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Poppins } from "next/font/google";
 import Sidebar from "./component/sidebar";
 import Header from "./component/header";
 import Providers from "./redux/providers";
 
-const inter = Inter({ subsets: ["latin"] });
+const poppins = Poppins({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-poppins",
+  weight: ["300", "400", "500", "600", "700"],
+});
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -20,12 +25,12 @@ export default function RootLayout({
   return (
     <Providers>
       <html lang="en">
-        <body className={`flex ${inter.className}`}>
+        <body className={`flex h-[1400px] bg-gray-50/70 ${poppins.className}`}>
           <Sidebar />
-          <section className="w-full">
+          <div className="flex-1">
             <Header />
-            {children}
-          </section>
+            <section className="flex w-full justify-center">{children}</section>
+          </div>
         </body>
       </html>
     </Providers>

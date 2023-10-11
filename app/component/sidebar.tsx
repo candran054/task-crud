@@ -5,6 +5,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../redux/store";
 import { toggleSidebar } from "../redux/sidebarSlice";
 import { AnimatePresence, motion } from "framer-motion";
+import { MdOutlineDashboard } from "react-icons/md";
+import Link from "next/link";
 
 export default function Sidebar() {
   const dispatch = useDispatch();
@@ -32,7 +34,7 @@ export default function Sidebar() {
         <motion.div
           initial={{ width: 0, opacity: 0 }}
           animate={{
-            width: isSidebarVisible ? 320 : 0,
+            width: isSidebarVisible ? 288 : 0,
             opacity: isSidebarVisible ? 1 : 0,
             transition: {
               type: "tween",
@@ -47,9 +49,17 @@ export default function Sidebar() {
               duration: 0.2,
             },
           }}
-          className={` bg-indigo-500 h-screen md:block`}
+          className={`sticky w-80 top-0 left-0 border border-r-gray h-screen overflow-y-auto md:block`}
         >
-          <h3 className="text-2xl m-3 text-white">Panel</h3>
+          <div className="flex w-full items-center p-4">
+            <p className="text-2xl text-indigo-500">
+              <MdOutlineDashboard />
+            </p>
+            <h3 className="text-2xl font-semibold m-2 text-gray-900">Panel</h3>
+          </div>
+          <ul>
+            <Link href={"/#"}>Dashboard</Link>
+          </ul>
         </motion.div>
       )}
     </AnimatePresence>

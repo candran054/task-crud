@@ -17,12 +17,12 @@ export default function Header() {
   };
 
   return (
-    <div className="flex p-4 bg-slate-200">
+    <div className="flex justify-between md:justify-end items-center p-4">
       <FaBars
         onClick={handleSidebarToggle}
         className={`text-xl text-indigo-500 md:hidden`}
       />
-      <div className="flex w-full justify-end">
+      <div className="flex pr-4 justify-end">
         <Image
           src="/images/Me.jpg"
           width={50}

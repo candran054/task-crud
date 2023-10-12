@@ -1,8 +1,6 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
-import Sidebar from "./component/sidebar";
-import Header from "./component/header";
 import Providers from "./redux/providers";
 
 const poppins = Poppins({
@@ -25,12 +23,8 @@ export default function RootLayout({
   return (
     <Providers>
       <html lang="en">
-        <body className={`flex h-[1400px] bg-gray-50/70 ${poppins.className}`}>
-          <Sidebar />
-          <div className="flex-1">
-            <Header />
-            <section className="flex w-full justify-center">{children}</section>
-          </div>
+        <body className={`flex bg-gray-50/70 ${poppins.className}`}>
+          {children}
         </body>
       </html>
     </Providers>

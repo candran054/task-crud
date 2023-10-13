@@ -1,5 +1,10 @@
 import React from "react";
+import DashboardUser from "./content/user/page";
 
 export default function DashboardPage() {
-  return <div>Home</div>;
+  return (
+    <>
+      <DashboardUser />
+    </>
+  );
 }

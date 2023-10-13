@@ -20,22 +20,22 @@ export async function POST(request: Request) {
   );
 
   if (response.status === 201) {
-    const secret = process.env.JWT_SECRET || "";
     const responseData = await response.json();
     const access_token = responseData.data.access_token;
     const jwt = access_token;
+    console.log("this jtw", jwt);
 
     const token = sign(
       {
         email,
       },
-      secret,
+      jwt,
       {
         expiresIn: MAX_AGE,
       },
     );
 
-    const serialized = serialize("UserJWT", token, {
+    const serialized = serialize("UserJWT", jwt, {
       httpOnly: true,
       secure: process.env.NODE_ENV !== "development",
       path: "/",

@@ -44,7 +44,7 @@ export default function DashboardLayout({
       <Sidebar />
       <div className="flex-1">
         <Header />
-        <section className="flex w-full justify-center">{children}</section>
+        <section>{children}</section>
       </div>
     </>
   );

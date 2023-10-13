@@ -1,13 +1,11 @@
-import { verify } from "jsonwebtoken";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 export async function GET() {
   const cookieStore = cookies();
-
   const token = cookieStore.get("UserJWT");
 
-  if (!token) {
+  if (!token || token.value !== token.value) {
     return NextResponse.json(
       {
         message: "Unauthorized",
@@ -18,29 +16,11 @@ export async function GET() {
     );
   }
 
-  const { value } = token;
+  const response = {
+    user: "are you authenticated?",
+  };
 
-  // Always check this
-  const secret = process.env.JWT_SECRET || "";
-
-  try {
-    verify(value, secret);
-
-    const response = {
-      user: "are you authenticate?",
-    };
-
-    return new Response(JSON.stringify(response), {
-      status: 200,
-    });
-  } catch (e) {
-    return NextResponse.json(
-      {
-        message: "Something went wrong",
-      },
-      {
-        status: 400,
-      },
-    );
-  }
+  return new Response(JSON.stringify(response), {
+    status: 200,
+  });
 }

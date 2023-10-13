@@ -40,15 +40,14 @@ export default function Home() {
         console.log(responseData);
       } else if (response.status === 400) {
         setError("Email or password is incorrect");
+        setIsLoading(false);
       } else {
         const responseData = await response.json();
-        setIsLoading(false);
         console.log(responseData);
       }
     } catch (error) {
       console.error("Error occurred:", error);
     }
-    setIsLoading(false);
   };
 
   return (
@@ -75,7 +74,11 @@ export default function Home() {
           <p className="text-xs text-semibold mt-1 text-red-500">{error}</p>
         )}
 
-        <Button disabled={isButtonDisabled} type="submit" className="mt-5">
+        <Button
+          disabled={isButtonDisabled}
+          type="submit"
+          className="bg-indigo-400 mt-5 hover:bg-indigo-600/70"
+        >
           {isLoading ? (
             <AiOutlineLoading3Quarters className="animate-spin" />
           ) : (

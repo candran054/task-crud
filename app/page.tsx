@@ -3,14 +3,22 @@
 import React, { useState } from "react";
 import { Button } from "./component/ui/button";
 import { useRouter } from "next/navigation";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 export default function Home() {
   const { push } = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  const isButtonDisabled = !email || !password;
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    setIsLoading(true);
+    setError("");
 
     const payload = {
       email: email,
@@ -30,13 +38,17 @@ export default function Home() {
         const responseData = await response.json();
         push("/dashboard");
         console.log(responseData);
+      } else if (response.status === 400) {
+        setError("Email or password is incorrect");
       } else {
         const responseData = await response.json();
+        setIsLoading(false);
         console.log(responseData);
       }
     } catch (error) {
       console.error("Error occurred:", error);
     }
+    setIsLoading(false);
   };
 
   return (
@@ -59,8 +71,16 @@ export default function Home() {
           type="password"
           className="w-full pl-2 pt-1 pb-1 bg-gray-300 rounded-md outline-none focus:bg-slate-200"
         />
-        <Button type="submit" className="mt-5">
-          Sign In
+        {error && (
+          <p className="text-xs text-semibold mt-1 text-red-500">{error}</p>
+        )}
+
+        <Button disabled={isButtonDisabled} type="submit" className="mt-5">
+          {isLoading ? (
+            <AiOutlineLoading3Quarters className="animate-spin" />
+          ) : (
+            "Sign In"
+          )}
         </Button>
       </div>
     </form>

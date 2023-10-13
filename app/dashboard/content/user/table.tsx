@@ -41,6 +41,9 @@ export default function UserTable({ token }: TableProps) {
   const [avatar, setAvatar] = useState("");
   const [selectedRole, setSelectedRole] = useState<UserRole>("Role");
   const [roleId, setRoleId] = useState("");
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  const tokenValue = token?.value;
 
   const handleRoleSelection = (selectedRole: UserRole) => {
     setSelectedRole(selectedRole);
@@ -60,8 +63,10 @@ export default function UserTable({ token }: TableProps) {
       password: password,
       bio: bio,
       avatar: avatar,
-      role: roleId,
+      roleId: roleId,
     };
+
+    console.log(payload);
 
     try {
       const response = await fetch(
@@ -70,11 +75,19 @@ export default function UserTable({ token }: TableProps) {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${tokenValue}`,
           },
           body: JSON.stringify(payload),
         },
       );
+
+      const responseData = await response.json();
+      if (response.status === 201) {
+        console.log(responseData);
+        setIsDialogOpen(false);
+      } else if (response.status === 400) {
+        console.error(responseData);
+      }
     } catch (error) {
       console.error(error);
     }
@@ -111,11 +124,14 @@ export default function UserTable({ token }: TableProps) {
           </TableBody>
         </Table>
       ) : (
-        <form onSubmit={handleSubmit} className="flex relative flex-col">
+        <div className="flex relative flex-col">
           <p className="text-center text-slate-400">No Data</p>
-          <Dialog>
-            <DialogTrigger>
-              <Button className="bg-indigo-400 mt-5 hover:bg-indigo-600/70">
+          <Dialog
+            open={isDialogOpen}
+            onOpenChange={(isOpen) => setIsDialogOpen(isOpen)}
+          >
+            <DialogTrigger asChild>
+              <Button className="w-[180px] mx-auto bg-indigo-400 mt-5 hover:bg-indigo-600/70">
                 Create New
               </Button>
             </DialogTrigger>
@@ -123,56 +139,76 @@ export default function UserTable({ token }: TableProps) {
               <DialogHeader>
                 <DialogTitle>Create New User</DialogTitle>
               </DialogHeader>
-              <input
-                className="w-full pl-2 pt-1 pb-1 bg-gray-300 rounded-md outline-none focus:bg-slate-200"
-                placeholder="name"
-                type="text"
-              />
-              <input
-                className="w-full pl-2 pt-1 pb-1 bg-gray-300 rounded-md outline-none focus:bg-slate-200"
-                placeholder="email"
-                type="email"
-              />
-              <input
-                className="w-full pl-2 pt-1 pb-1 bg-gray-300 rounded-md outline-none focus:bg-slate-200"
-                placeholder="password"
-                type="password"
-              />
-              <input
-                className="w-full pl-2 pt-1 pb-1 bg-gray-300 rounded-md outline-none focus:bg-slate-200"
-                placeholder="bio"
-                type="text"
-              />
-              <input
-                className="w-full pl-2 pt-1 pb-1 bg-gray-300 rounded-md outline-none focus:bg-slate-200"
-                placeholder="avatar"
-                type="url"
-              />
-              <DropdownMenu>
-                <DropdownMenuTrigger className="text-left" asChild>
-                  <Button className="w-[128px]">{selectedRole}</Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="absolute -right-16">
-                  <DropdownMenuItem
-                    onClick={() => handleRoleSelection("admin")}
-                    className="cursor-pointer"
-                  >
-                    admin
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={() => handleRoleSelection("user")}
-                    className="cursor-pointer"
-                  >
-                    user
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-              <Button className="w-1/2 mx-auto text-black hover:text-white bg-slate-400">
-                Submit
-              </Button>
+              <form onSubmit={handleSubmit}>
+                <input
+                  className="w-full pl-2 pt-1 pb-1 bg-gray-300 rounded-md outline-none focus:bg-slate-200"
+                  placeholder="name"
+                  name="name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  type="text"
+                />
+                <input
+                  className="w-full pl-2 pt-1 pb-1 bg-gray-300 rounded-md outline-none focus:bg-slate-200"
+                  placeholder="email"
+                  name="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  type="email"
+                />
+                <input
+                  className="w-full pl-2 pt-1 pb-1 bg-gray-300 rounded-md outline-none focus:bg-slate-200"
+                  placeholder="password"
+                  name="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  type="password"
+                />
+                <input
+                  className="w-full pl-2 pt-1 pb-1 bg-gray-300 rounded-md outline-none focus:bg-slate-200"
+                  placeholder="bio"
+                  name="bio"
+                  value={bio}
+                  onChange={(e) => setBio(e.target.value)}
+                  type="text"
+                />
+                <input
+                  className="w-full pl-2 pt-1 pb-1 bg-gray-300 rounded-md outline-none focus:bg-slate-200"
+                  placeholder="avatar"
+                  name="avatar"
+                  value={avatar}
+                  onChange={(e) => setAvatar(e.target.value)}
+                  type="url"
+                />
+                <DropdownMenu>
+                  <DropdownMenuTrigger className="text-left" asChild>
+                    <Button className="w-[128px]">{selectedRole}</Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="absolute -right-16">
+                    <DropdownMenuItem
+                      onClick={() => handleRoleSelection("admin")}
+                      className="cursor-pointer"
+                    >
+                      admin
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => handleRoleSelection("user")}
+                      className="cursor-pointer"
+                    >
+                      user
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+                <Button
+                  type="submit"
+                  className="w-1/2 mx-auto text-black hover:text-white bg-slate-400"
+                >
+                  Submit
+                </Button>
+              </form>
             </DialogContent>
           </Dialog>
-        </form>
+        </div>
       )}
     </>
   );

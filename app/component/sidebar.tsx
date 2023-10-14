@@ -6,7 +6,6 @@ import { RootState } from "../redux/store";
 import { toggleSidebar } from "../redux/sidebarSlice";
 import { AnimatePresence, motion } from "framer-motion";
 import { MdOutlineDashboard } from "react-icons/md";
-import Link from "next/link";
 
 export default function Sidebar() {
   const dispatch = useDispatch();
@@ -57,9 +56,6 @@ export default function Sidebar() {
             </p>
             <h3 className="text-2xl font-semibold m-2 text-gray-900">Panel</h3>
           </div>
-          <ul>
-            <Link href={"/#"}>Dashboard</Link>
-          </ul>
         </motion.div>
       )}
     </AnimatePresence>

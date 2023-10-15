@@ -24,6 +24,7 @@ import {
   DialogTrigger,
 } from "@/app/component/ui/dialog";
 import { RequestCookie } from "next/dist/compiled/@edge-runtime/cookies";
+import { useRouter } from "next/navigation";
 
 interface TableProps {
   token: RequestCookie | undefined;
@@ -39,6 +40,7 @@ interface User {
 type UserRole = "Role" | "admin" | "user";
 
 export default function UserTable({ token, data }: TableProps) {
+  const { push, refresh } = useRouter();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -89,7 +91,8 @@ export default function UserTable({ token, data }: TableProps) {
       if (response.status === 201) {
         console.log(responseData);
         setIsDialogCreate(false);
-        window.location.reload();
+        push("/dashboard");
+        refresh();
       } else if (response.status === 400) {
         console.error(responseData);
       }
@@ -129,9 +132,8 @@ export default function UserTable({ token, data }: TableProps) {
         const responseData = await response.json();
         if (response.ok) {
           setIsDialogOpen(false);
-          window.location.reload();
-          console.log(responseData);
-          setIsDialogOpen(false);
+          push("/dashboard");
+          refresh();
         } else if (response.status === 400) {
           console.error(responseData);
         }
@@ -154,8 +156,8 @@ export default function UserTable({ token, data }: TableProps) {
       });
 
       if (response.ok) {
-        window.location.reload();
-        console.log("User deleted successfully.");
+        push("/dashboard");
+        refresh();
       } else {
         const responseData = await response.json();
         console.error(responseData);
